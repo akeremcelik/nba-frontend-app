@@ -51,5 +51,7 @@ import {useRoute, useRouter} from "vue-router";
 </template>
 
 <style>
-
+h2 {
+  color: cornflowerblue;
+}
 </style>

@@ -51,3 +51,9 @@ onMounted(() => {
     />
   </div>
 </template>
+
+<style>
+h2 {
+  color: cornflowerblue;
+}
+</style>

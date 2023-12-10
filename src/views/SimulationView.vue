@@ -137,5 +137,7 @@
 </template>
 
 <style scoped>
-
+h2 {
+  color: cornflowerblue;
+}
 </style>
