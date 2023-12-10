@@ -22,7 +22,8 @@ const props = defineProps({
     </thead>
     <tbody>
     <tr v-for="fixture in fixtures">
-      <td>{{ fixture.home_team.name }} - {{ fixture.away_team.name }}</td>
+      <td>{{ fixture.home_team.name }} {{ fixture.home_team_score }} - {{ fixture.away_team_score }} {{ fixture.away_team.name }}
+      </td>
     </tr>
     </tbody>
   </table>

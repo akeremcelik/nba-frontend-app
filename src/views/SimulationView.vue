@@ -12,9 +12,11 @@
   const router = useRouter()
 
   const leagueId = route.params.id
+
   const scoreboards = ref([])
   const predictions = ref([])
   const weeklyFixture = ref([])
+  const playedFixtures = ref([])
 
   const listScoreboard = async () => {
     const {response, json} = await sendRequest(
@@ -46,8 +48,7 @@
     )
 
     if (response.ok) {
-      await listScoreboard()
-      await listWeekFixtures()
+      fetchPageData()
     }
   }
 
@@ -58,14 +59,29 @@
     )
 
     if (response.ok) {
-      await listScoreboard()
-      await listWeekFixtures()
+      fetchPageData()
     }
   }
 
-  onMounted(() => {
+  const getPlayedFixtures = async () => {
+    const {response, json} = await sendRequest(
+        'GET',
+        `${import.meta.env.VITE_API_URL}/leagues/${leagueId}/list-played-fixtures`
+    )
+
+    if (response.ok) {
+      playedFixtures.value = json
+    }
+  }
+
+  const fetchPageData = () => {
     listScoreboard()
     listWeekFixtures()
+    getPlayedFixtures()
+  }
+
+  onMounted(() => {
+    fetchPageData()
   })
 </script>
 
@@ -79,7 +95,7 @@
       />
     </div>
 
-    <div>
+    <div v-if="weeklyFixture">
       <WeeklyFixture
           v-for="(fixtures, week) in weeklyFixture"
           :week="week"
@@ -87,14 +103,14 @@
       />
     </div>
 
-    <div>
+    <div v-if="predictions.length">
       <Predictions
         :predictions="predictions"
       />
     </div>
   </div>
 
-  <div style="display: flex; gap: 30px;">
+  <div style="display: flex; gap: 30px; margin-bottom: 20px;">
     <Button
         text="Play All Weeks"
         @click="playAllWeeks"
@@ -108,6 +124,14 @@
     <Button
         text="Reset Data"
         @click="router.push({'name': 'teams'})"
+    />
+  </div>
+
+  <div style="display: flex; flex-wrap: wrap;">
+    <WeeklyFixture
+        v-for="(fixtures, week) in playedFixtures"
+        :week="week"
+        :fixtures="fixtures"
     />
   </div>
 </template>
